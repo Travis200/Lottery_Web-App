@@ -1,0 +1,30 @@
+db:
+    image: mysql
+    container_name: mysql_db
+    environment:
+        MYSQL_ROOT_PASSWORD: sesame
+        MYSQL_DATABASE: lottery
+        MYSQL_USER: user
+        MYSQL_PASSWORD: password
+    ports:
+        - "33333:3306"
+    volumes:
+        - ./db/data.sql:/docker-entrypoint-initdb.d/data.sql
+       
+
+
+web:
+    image: tomcat
+    container_name: tomcat_server
+    environment:
+        JDBC_URL: jdbc:mysql://db:3306/lottery?connectTimeout=0&amp;socketTimeout=0&amp;autoReconnect=true
+        JDBC_USER: user
+        JDBC_PASS: password
+    ports:
+        - "44444:8080"
+    volumes:
+        - ./tomcat/webapps/ROOT/index.jsp:/usr/local/tomcat/webapps/ROOT/index.jsp
+        - ./tomcat/webapps/LotteryWebApp_war.war:/usr/local/tomcat/webapps/LotteryWebApp_war.war
+        - ./tomcat/logs:/usr/local/tomcat/logs
+    links:
+        - db

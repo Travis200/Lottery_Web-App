@@ -1,0 +1,57 @@
+MYSQL DOCKER INSTRUCTIONS
+
+Inside this folder you will find a data.sql file and a Dockerfile. These need to stay in the same folder to work.
+
+DATA.SQL FILE
+
+This contains the data to setup the userAccounts table in the lottery MySQL database which will run in a Docker image.
+
+The userAccounts table is populated with one user account for you.
+
+You can insert more user accounts in the file if you wish but don't change the userAccounts table!
+
+
+DOCKERFILE
+
+This will setup and run the lottery MySQL database for you and create the table and the data defined in the data.sql file.
+
+The file should work as it is without any alterations needed.
+
+There are two stages to setting the database up: build and run
+
+1. Build
+
+- first open a terminal at the MySQL Database folder
+- execute the build command:
+
+>> docker build -t="<docker account name here>/lotterydb .
+
+2. Run
+
+- execute the run command:
+
+>> docker run -d -p 33333:3306 --name lotteryDB <docker account name here>/lotterydb
+
+- you should get an output similar to below which is the docker image ID:
+
+>> a75606af8fc6c02dd79a112a8feeb6ff674ab0c31a4b0d87cc4af4d34dea8e08
+
+
+
+CONNECTING TO DOCKER IMAGE
+
+You will need to use the following URL in your Java code if running a local tomcat server on your computer and MySQL in Docker. This needs to be used in all your Java Servlets which are connecting to the mysql database
+
+String DB_URL = "jdbc:mysql://localhost:33333/lottery";
+
+
+
+STOPPING THE DOCKER IMAGE
+
+When you have finished using the image it is best to stop and remove the image (note that any database content added whilst running will be lost)
+
+>> docker stop lotterydb
+
+>> docker rm lotterydb
+
+>> docker image rm <docker account name here>/lotterydb
